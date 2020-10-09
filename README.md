@@ -11,6 +11,151 @@ M-Pesa SDK for JAVA is an unofficial library aiming to help develbusinesses inte
 - Query the status of a transaction
 
 ## Usage <a name="usage"></a>
+
+### Receive Money from a Mobile Account
+
+```java
+Client client = new ClientBuilder()
+    .setApiKey("<REPLACE>")
+    .setPublicKey("<REPLACE>")
+    .setServiceProviderCode("<REPLACE>")
+    .build();
+
+ReceiveRequest paymentData = new ReceiveRequestBuilder()
+    .setFrom('841234567')
+    .setReference('11114')
+    .setTransactionRef('T12344CC')
+    .setAmount(10.0)
+    .build();
+    
+client.receive(paymentData).enqueue(new Callback<ReceiveResponse> {
+    @Override
+    public void onResponse(Call<ReceiveResponse> call, Response<ReceiveResponse> response) {
+        // handle success
+    }
+    
+    @Override
+    public void onFailure(Call<ReceiveResponse> call, Throwable t) {
+        // handle errors
+    }
+});
+```
+
+### Send Money to a Mobile Account
+
+```java
+Client client = new ClientBuilder()
+    .setApiKey("<REPLACE>")
+    .setPublicKey("<REPLACE>")
+    .setServiceProviderCode("<REPLACE>")
+    .build();
+
+SendRequest paymentData = new SendRequestBuilder()
+    .setTo('841234567')
+    .setReference('11114')
+    .setTransactionRef('T12344CC')
+    .setAmount(10.0)
+    .build();
+    
+client.send(paymentData).enqueue(new Callback<SendResponse> {
+    @Override
+    public void onResponse(Call<SendResponse> call, Response<SendResponse> response) {
+        // handle success
+    }
+    
+    @Override
+    public void onFailure(Call<SendResponse> call, Throwable t) {
+        // handle errors
+    }
+});
+```
+
+### Send Money to a Business Account
+
+```java
+Client client = new ClientBuilder()
+    .setApiKey("<REPLACE>")
+    .setPublicKey("<REPLACE>")
+    .setServiceProviderCode("<REPLACE>")
+    .build();
+
+SendRequest paymentData = new SendRequestBuilder()
+    .setTo('979797')
+    .setReference('11114')
+    .setTransactionRef('T12344CC')
+    .setAmount(10.0)
+    .build();
+    
+client.send(paymentData).enqueue(new Callback<SendResponse> {
+    @Override
+    public void onResponse(Call<SendResponse> call, Response<SendResponse> response) {
+        // handle success
+    }
+    
+    @Override
+    public void onFailure(Call<SendResponse> call, Throwable t) {
+        // handle errors
+    }
+});
+```
+
+### Revert a Transaction
+
+```java
+Client client = new ClientBuilder()
+    .setApiKey("<REPLACE>")
+    .setPublicKey("<REPLACE>")
+    .setServiceProviderCode("<REPLACE>")
+    .setInitiatorIdentifier("<REPLACE>")
+    .setSecurityCredential("<REPLACE>")
+    .build();
+
+ReversalRequest paymentData = new ReversalRequestBuilder()
+    .setReference('11114')
+    .setTransactionRef('T12344CC')
+    .setAmount(10.0)
+    .build();
+    
+client.revert(paymentData).enqueue(new Callback<ReversalResponse> {
+    @Override
+    public void onResponse(Call<ReversalResponse> call, Response<ReversalResponse> response) {
+        // handle success
+    }
+    
+    @Override
+    public void onFailure(Call<ReversalResponse> call, Throwable t) {
+        // handle errors
+    }
+});
+```
+
+### Query the status of a Transaction
+
+```java
+Client client = new ClientBuilder()
+    .setApiKey("<REPLACE>")
+    .setPublicKey("<REPLACE>")
+    .setServiceProviderCode("<REPLACE>")
+    .build();
+
+QueryRequest queryData = new QueryRequestBuilder()
+    .setReference('11114') // input_ThirdPartyReference
+    .setSubject('T12344CC') // input_QueryReference
+    .build();
+    
+client.query(queryData).enqueue(new Callback<QueryResponse> {
+    @Override
+    public void onResponse(Call<QueryResponse> call, Response<QueryResponse> response) {
+        // handle success
+    }
+    
+    @Override
+    public void onFailure(Call<QueryResponse> call, Throwable t) {
+        // handle errors
+    }
+});
+```
+
 ## Installation <a name="installation"></a>
 
 ### Using Composer <a name="#"></a>
