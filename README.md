@@ -15,28 +15,46 @@ M-Pesa SDK for JAVA is an unofficial library aiming to help develbusinesses inte
 ### Receive Money from a Mobile Account
 
 ```java
-Client client = new ClientBuilder()
-    .setApiKey("<REPLACE>")
-    .setPublicKey("<REPLACE>")
-    .setServiceProviderCode("<REPLACE>")
+import org.paymentsds.mpesa.Callback;
+import org.paymentsds.mpesa.Client;
+import org.paymentsds.mpesa.Environment;
+import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Response;
+
+Client client = new Client.Builder()
+    .apiKey("<REPLACE>")
+    .publicKey("<REPLACE>")
+    .serviceProviderCode("<REPLACE>")
+    .initiatorIdentifier("<REPLACE>")
+    .environment(Environment.PRODUCTION)
+    .host("https://vm.co.mz")
+    .build();    
+
+Intent paymentIntent = new Intent.Builder()
+    .amount(10.0)
+    .from("841234567")
+    .reference("12345")
+    .transaction("12345")
     .build();
 
-ReceiveRequest paymentData = new ReceiveRequestBuilder()
-    .setFrom('841234567')
-    .setReference('11114')
-    .setTransactionRef('T12344CC')
-    .setAmount(10.0)
-    .build();
-    
-client.receive(paymentData).enqueue(new Callback<ReceiveResponse> {
+// Synchronous Call
+try {
+    Response response = client.receive(paymentIntent);
+    // Handle success scenario
+} catch (Exception e) {
+    // Handle failure scenario
+}
+
+// Asynchronous Call
+client.receive(paymentIntent, new Callback() {
     @Override
-    public void onResponse(Call<ReceiveResponse> call, Response<ReceiveResponse> response) {
-        // handle success
+    public void onResponse(Response response) {
+        // Handle success scenario
     }
     
     @Override
-    public void onFailure(Call<ReceiveResponse> call, Throwable t) {
-        // handle errors
+    public void onError(Exception e) {
+        // Handle failure scenario
     }
 });
 ```
@@ -44,28 +62,46 @@ client.receive(paymentData).enqueue(new Callback<ReceiveResponse> {
 ### Send Money to a Mobile Account
 
 ```java
-Client client = new ClientBuilder()
-    .setApiKey("<REPLACE>")
-    .setPublicKey("<REPLACE>")
-    .setServiceProviderCode("<REPLACE>")
+import org.paymentsds.mpesa.Callback;
+import org.paymentsds.mpesa.Client;
+import org.paymentsds.mpesa.Environment;
+import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Response;
+
+Client client = new Client.Builder()
+    .apiKey("<REPLACE>")
+    .publicKey("<REPLACE>")
+    .serviceProviderCode("<REPLACE>")
+    .initiatorIdentifier("<REPLACE>")
+    .environment(Environment.PRODUCTION)
+    .host("https://vm.co.mz")
+    .build();    
+
+Intent paymentIntent = new Intent.Builder()
+    .amount(10.0)
+    .to("841234567")
+    .reference("12345")
+    .transaction("12345")
     .build();
 
-SendRequest paymentData = new SendRequestBuilder()
-    .setTo('841234567')
-    .setReference('11114')
-    .setTransactionRef('T12344CC')
-    .setAmount(10.0)
-    .build();
-    
-client.send(paymentData).enqueue(new Callback<SendResponse> {
+// Synchronous Call
+try {
+    Response response = client.send(paymentIntent);
+    // Handle success scenario
+} catch (Exception e) {
+    // Handle failure scenario
+}
+
+// Asynchronous Call
+client.send(paymentIntent, new Callback() {
     @Override
-    public void onResponse(Call<SendResponse> call, Response<SendResponse> response) {
-        // handle success
+    public void onResponse(Response response) {
+        // Handle success scenario
     }
     
     @Override
-    public void onFailure(Call<SendResponse> call, Throwable t) {
-        // handle errors
+    public void onError(Exception e) {
+        // Handle failure scenario
     }
 });
 ```
@@ -73,28 +109,46 @@ client.send(paymentData).enqueue(new Callback<SendResponse> {
 ### Send Money to a Business Account
 
 ```java
-Client client = new ClientBuilder()
-    .setApiKey("<REPLACE>")
-    .setPublicKey("<REPLACE>")
-    .setServiceProviderCode("<REPLACE>")
+import org.paymentsds.mpesa.Callback;
+import org.paymentsds.mpesa.Client;
+import org.paymentsds.mpesa.Environment;
+import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Response;
+
+Client client = new Client.Builder()
+    .apiKey("<REPLACE>")
+    .publicKey("<REPLACE>")
+    .serviceProviderCode("<REPLACE>")
+    .initiatorIdentifier("<REPLACE>")
+    .environment(Environment.PRODUCTION)
+    .host("https://vm.co.mz")
+    .build();    
+
+Intent paymentIntent = new Intent.Builder()
+    .amount(10.0)
+    .to("54321")
+    .reference("12345")
+    .transaction("12345")
     .build();
 
-SendRequest paymentData = new SendRequestBuilder()
-    .setTo('979797')
-    .setReference('11114')
-    .setTransactionRef('T12344CC')
-    .setAmount(10.0)
-    .build();
-    
-client.send(paymentData).enqueue(new Callback<SendResponse> {
+// Synchronous Call
+try {
+    Response response = client.send(paymentIntent);
+    // Handle success scenario
+} catch (Exception e) {
+    // Handle failure scenario
+}
+
+// Asynchronous Call
+client.send(paymentIntent, new Callback() {
     @Override
-    public void onResponse(Call<SendResponse> call, Response<SendResponse> response) {
-        // handle success
+    public void onResponse(Response response) {
+        // Handle success scenario
     }
     
     @Override
-    public void onFailure(Call<SendResponse> call, Throwable t) {
-        // handle errors
+    public void onError(Exception e) {
+        // Handle failure scenario
     }
 });
 ```
@@ -102,29 +156,46 @@ client.send(paymentData).enqueue(new Callback<SendResponse> {
 ### Revert a Transaction
 
 ```java
-Client client = new ClientBuilder()
-    .setApiKey("<REPLACE>")
-    .setPublicKey("<REPLACE>")
-    .setServiceProviderCode("<REPLACE>")
-    .setInitiatorIdentifier("<REPLACE>")
-    .setSecurityCredential("<REPLACE>")
+import org.paymentsds.mpesa.Callback;
+import org.paymentsds.mpesa.Client;
+import org.paymentsds.mpesa.Environment;
+import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Response;
+
+Client client = new Client.Builder()
+    .apiKey("<REPLACE>")
+    .publicKey("<REPLACE>")
+    .serviceProviderCode("<REPLACE>")
+    .initiatorIdentifier("<REPLACE>")
+    .environment(Environment.PRODUCTION)
+    .host("https://vm.co.mz")
+    .securityCredential("<REPLACE>")
+    .build();    
+
+Intent reversalIntent = new Intent.Builder()
+    .amount(10.0)
+    .reference("12345")
+    .transaction("12345")
     .build();
 
-ReversalRequest paymentData = new ReversalRequestBuilder()
-    .setReference('11114')
-    .setTransactionRef('T12344CC')
-    .setAmount(10.0)
-    .build();
-    
-client.revert(paymentData).enqueue(new Callback<ReversalResponse> {
+// Synchronous Call
+try {
+    Response response = client.revert(reversalIntent);
+    // Handle success scenario
+} catch (Exception e) {
+    // Handle failure scenario
+}
+
+// Asynchronous Call
+client.revert(reversalIntent, new Callback() {
     @Override
-    public void onResponse(Call<ReversalResponse> call, Response<ReversalResponse> response) {
-        // handle success
+    public void onResponse(Response response) {
+        // Handle success scenario
     }
     
     @Override
-    public void onFailure(Call<ReversalResponse> call, Throwable t) {
-        // handle errors
+    public void onError(Exception e) {
+        // Handle failure scenario
     }
 });
 ```
@@ -132,26 +203,41 @@ client.revert(paymentData).enqueue(new Callback<ReversalResponse> {
 ### Query the status of a Transaction
 
 ```java
-Client client = new ClientBuilder()
-    .setApiKey("<REPLACE>")
-    .setPublicKey("<REPLACE>")
-    .setServiceProviderCode("<REPLACE>")
+import org.paymentsds.mpesa.Callback;
+import org.paymentsds.mpesa.Client;
+import org.paymentsds.mpesa.Environment;
+import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Response;
+
+Client client = new Client.Builder()
+    .apiKey("<REPLACE>")
+    .publicKey("<REPLACE>")
+    .serviceProviderCode("<REPLACE>")
+    .build();    
+
+Intent queryIntent = new Intent.Builder()
+    .reference("12345") // input_ThirdPartyReference
+    .subject("12345") // input_QueryReference
     .build();
 
-QueryRequest queryData = new QueryRequestBuilder()
-    .setReference('11114') // input_ThirdPartyReference
-    .setSubject('T12344CC') // input_QueryReference
-    .build();
-    
-client.query(queryData).enqueue(new Callback<QueryResponse> {
+// Synchronous Call
+try {
+    Response response = client.query(queryIntent);
+    // Handle success scenario
+} catch (Exception e) {
+    // Handle failure scenario
+}
+
+// Asynchronous Call
+client.query(queryIntent, new Callback() {
     @Override
-    public void onResponse(Call<QueryResponse> call, Response<QueryResponse> response) {
-        // handle success
+    public void onResponse(Response response) {
+        // Handle success scenario
     }
     
     @Override
-    public void onFailure(Call<QueryResponse> call, Throwable t) {
-        // handle errors
+    public void onError(Exception e) {
+        // Handle failure scenario
     }
 });
 ```
