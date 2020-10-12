@@ -18,7 +18,7 @@ M-Pesa SDK for JAVA is an unofficial library aiming to help develbusinesses inte
 import org.paymentsds.mpesa.Callback;
 import org.paymentsds.mpesa.Client;
 import org.paymentsds.mpesa.Environment;
-import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Request;
 import org.paymentsds.mpesa.Response;
 
 Client client = new Client.Builder()
@@ -30,7 +30,7 @@ Client client = new Client.Builder()
     .host("https://vm.co.mz")
     .build();    
 
-Intent paymentIntent = new Intent.Builder()
+Request paymentRequest = new Request.Builder()
     .amount(10.0)
     .from("841234567")
     .reference("12345")
@@ -39,14 +39,14 @@ Intent paymentIntent = new Intent.Builder()
 
 // Synchronous Call
 try {
-    Response response = client.receive(paymentIntent);
+    Response response = client.receive(paymentRequest);
     // Handle success scenario
 } catch (Exception e) {
     // Handle failure scenario
 }
 
 // Asynchronous Call
-client.receive(paymentIntent, new Callback() {
+client.receive(paymentRequest, new Callback() {
     @Override
     public void onResponse(Response response) {
         // Handle success scenario
@@ -65,7 +65,7 @@ client.receive(paymentIntent, new Callback() {
 import org.paymentsds.mpesa.Callback;
 import org.paymentsds.mpesa.Client;
 import org.paymentsds.mpesa.Environment;
-import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Request;
 import org.paymentsds.mpesa.Response;
 
 Client client = new Client.Builder()
@@ -77,7 +77,7 @@ Client client = new Client.Builder()
     .host("https://vm.co.mz")
     .build();    
 
-Intent paymentIntent = new Intent.Builder()
+Request paymentIntent = new Request.Builder()
     .amount(10.0)
     .to("841234567")
     .reference("12345")
@@ -86,14 +86,14 @@ Intent paymentIntent = new Intent.Builder()
 
 // Synchronous Call
 try {
-    Response response = client.send(paymentIntent);
+    Response response = client.send(paymentRequest);
     // Handle success scenario
 } catch (Exception e) {
     // Handle failure scenario
 }
 
 // Asynchronous Call
-client.send(paymentIntent, new Callback() {
+client.send(paymentRequest, new Callback() {
     @Override
     public void onResponse(Response response) {
         // Handle success scenario
@@ -112,7 +112,7 @@ client.send(paymentIntent, new Callback() {
 import org.paymentsds.mpesa.Callback;
 import org.paymentsds.mpesa.Client;
 import org.paymentsds.mpesa.Environment;
-import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Request;
 import org.paymentsds.mpesa.Response;
 
 Client client = new Client.Builder()
@@ -124,7 +124,7 @@ Client client = new Client.Builder()
     .host("https://vm.co.mz")
     .build();    
 
-Intent paymentIntent = new Intent.Builder()
+Request paymentIntent = new Request.Builder()
     .amount(10.0)
     .to("54321")
     .reference("12345")
@@ -133,14 +133,14 @@ Intent paymentIntent = new Intent.Builder()
 
 // Synchronous Call
 try {
-    Response response = client.send(paymentIntent);
+    Response response = client.send(paymentRequest);
     // Handle success scenario
 } catch (Exception e) {
     // Handle failure scenario
 }
 
 // Asynchronous Call
-client.send(paymentIntent, new Callback() {
+client.send(paymentRequest, new Callback() {
     @Override
     public void onResponse(Response response) {
         // Handle success scenario
@@ -159,7 +159,7 @@ client.send(paymentIntent, new Callback() {
 import org.paymentsds.mpesa.Callback;
 import org.paymentsds.mpesa.Client;
 import org.paymentsds.mpesa.Environment;
-import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Request;
 import org.paymentsds.mpesa.Response;
 
 Client client = new Client.Builder()
@@ -172,7 +172,7 @@ Client client = new Client.Builder()
     .securityCredential("<REPLACE>")
     .build();    
 
-Intent reversalIntent = new Intent.Builder()
+Request reversalIntent = new Request.Builder()
     .amount(10.0)
     .reference("12345")
     .transaction("12345")
@@ -180,14 +180,14 @@ Intent reversalIntent = new Intent.Builder()
 
 // Synchronous Call
 try {
-    Response response = client.revert(reversalIntent);
+    Response response = client.revert(reversalRequest);
     // Handle success scenario
 } catch (Exception e) {
     // Handle failure scenario
 }
 
 // Asynchronous Call
-client.revert(reversalIntent, new Callback() {
+client.revert(reversalRequest, new Callback() {
     @Override
     public void onResponse(Response response) {
         // Handle success scenario
@@ -215,21 +215,21 @@ Client client = new Client.Builder()
     .serviceProviderCode("<REPLACE>")
     .build();    
 
-Intent queryIntent = new Intent.Builder()
+Request queryIntent = new Request.Builder()
     .reference("12345") // input_ThirdPartyReference
     .subject("12345") // input_QueryReference
     .build();
 
 // Synchronous Call
 try {
-    Response response = client.query(queryIntent);
+    Response response = client.query(queryRequest);
     // Handle success scenario
 } catch (Exception e) {
     // Handle failure scenario
 }
 
 // Asynchronous Call
-client.query(queryIntent, new Callback() {
+client.query(queryRequest, new Callback() {
     @Override
     public void onResponse(Response response) {
         // Handle success scenario
