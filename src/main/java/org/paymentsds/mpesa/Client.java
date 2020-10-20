@@ -26,34 +26,6 @@ public class Client {
         this.securityCredential = securityCredential;
     }
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public String getServiceProviderCode() {
-        return serviceProviderCode;
-    }
-
-    public String getInitiatorIdentifier() {
-        return initiatorIdentifier;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getSecurityCredential() {
-        return securityCredential;
-    }
-
     /*public Response receive(Request request) {
         TODO
     }*/
