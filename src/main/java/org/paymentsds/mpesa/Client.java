@@ -5,7 +5,6 @@ public class Client {
     private final String publicKey;
     private final String serviceProviderCode;
     private final String initiatorIdentifier;
-    private final Environment environment;
     private final String host;
     private final String securityCredential;
 
@@ -14,14 +13,12 @@ public class Client {
             String publicKey,
             String serviceProviderCode,
             String initiatorIdentifier,
-            Environment environment,
             String host,
             String securityCredential) {
         this.apiKey = apiKey;
         this.publicKey = publicKey;
         this.serviceProviderCode = serviceProviderCode;
         this.initiatorIdentifier = initiatorIdentifier;
-        this.environment = environment;
         this.host = host;
         this.securityCredential = securityCredential;
     }
@@ -40,7 +37,6 @@ public class Client {
         String publicKey;
         String serviceProviderCode;
         String initiatorIdentifier;
-        Environment environment;
         String host;
         String securityCredential;
 
@@ -65,7 +61,11 @@ public class Client {
         }
 
         public Builder environment(Environment environment) {
-            this.environment = environment;
+            if (environment == Environment.DEVELOPMENT) {
+                host = "https://api.sandbox.vm.co.mz";
+            } else {
+                host = "https://api.vm.co.mz";
+            }
             return this;
         }
 
@@ -87,13 +87,9 @@ public class Client {
                 throw new IllegalArgumentException("Client must contain a publicKey");
             }
             if (host == null) {
-                throw new IllegalArgumentException("Client must contain a host");
+                throw new IllegalArgumentException("Client must contain either a host or an environment");
             }
-            if (environment == null) {
-                environment = Environment.DEVELOPMENT;
-            }
-            return new Client(apiKey, publicKey, serviceProviderCode, initiatorIdentifier,
-                    environment, host, securityCredential);
+            return new Client(apiKey, publicKey, serviceProviderCode, initiatorIdentifier, host, securityCredential);
         }
     }
 }
