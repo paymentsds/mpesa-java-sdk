@@ -41,7 +41,6 @@ public class Client {
 
     public Response receive(Request request) throws IOException {
         MpesaService service = getService(18352);
-
         if (serviceProviderCode == null) {
             throw new IllegalArgumentException("Client must contain serviceProviderCode");
         }
@@ -52,7 +51,6 @@ public class Client {
 
     public void receive(Request request, Callback callback) {
         MpesaService service = getService(18352);
-
         if (serviceProviderCode == null) {
             throw new IllegalArgumentException("Client must contain serviceProviderCode");
         }
@@ -73,6 +71,55 @@ public class Client {
                 callback.onError(new Exception(t));
             }
         });
+    }
+
+    public Response send(Request request) throws IOException {
+        MpesaService service = getService(18345);
+        if (serviceProviderCode == null) {
+            throw new IllegalArgumentException("Client must contain serviceProviderCode");
+        }
+        // TODO(rosario): Check the 'to' property to see if it's a valid msisdn (B2C)
+        // Otherwise, it might be a B2B operation
+        if (request.getTo() == null) {
+            throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
+        }
+        MpesaRequest mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
+        retrofit2.Response<MpesaResponse> response = service.b2c(generateAuthorizationToken(), mpesaRequest).execute();
+        return parseHttpResponse(response);
+    }
+
+    public void send(Request request, Callback callback) {
+        MpesaService service = getService(18345);
+        if (serviceProviderCode == null) {
+            throw new IllegalArgumentException("Client must contain serviceProviderCode");
+        }
+        if (request.getTo() == null) {
+            throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
+        }
+        retrofit2.Callback<MpesaResponse> retrofitCallback = new retrofit2.Callback<MpesaResponse>() {
+            @Override
+            public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
+                try {
+                    Response res = parseHttpResponse(response);
+                    callback.onResponse(res);
+                } catch (IOException e) {
+                    callback.onError(e);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MpesaResponse> call, Throwable t) {
+                callback.onError(new Exception(t));
+            }
+        };
+        MpesaRequest mpesaRequest;
+        // TODO(rosario): Improve this check once we have regex implemented
+        if (request.getTo().startsWith("258")) {
+            mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
+            service.b2c(generateAuthorizationToken(), mpesaRequest).enqueue(retrofitCallback);
+        } else {
+            // TODO: B2B
+        }
     }
 
     private Response parseHttpResponse(retrofit2.Response<MpesaResponse> response) throws IOException {

@@ -26,6 +26,16 @@ public class MpesaRequest {
         return mpesaRequest;
     }
 
+    public static MpesaRequest fromB2CRequest(Request request, String serviceProviderCode) {
+        MpesaRequest mpesaRequest = new MpesaRequest();
+        mpesaRequest.setInput_Amount(request.getAmount() + "");
+        mpesaRequest.setInput_TransactionReference(request.getTransaction());
+        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
+        mpesaRequest.setInput_CustomerMSISDN(request.getTo());
+        mpesaRequest.setInput_ServiceProviderCode(serviceProviderCode);
+        return mpesaRequest;
+    }
+
     public String getInput_TransactionReference() {
         return input_TransactionReference;
     }
