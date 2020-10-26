@@ -36,6 +36,16 @@ public class MpesaRequest {
         return mpesaRequest;
     }
 
+    public static MpesaRequest fromB2BRequest(Request request, String primaryPartyCode) {
+        MpesaRequest mpesaRequest = new MpesaRequest();
+        mpesaRequest.setInput_Amount(request.getAmount() + "");
+        mpesaRequest.setInput_TransactionReference(request.getTransaction());
+        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
+        mpesaRequest.setInput_PrimaryPartyCode(primaryPartyCode);
+        mpesaRequest.setInput_ReceiverPartyCode(request.getTo());
+        return mpesaRequest;
+    }
+
     public String getInput_TransactionReference() {
         return input_TransactionReference;
     }

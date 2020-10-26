@@ -74,22 +74,29 @@ public class Client {
     }
 
     public Response send(Request request) throws IOException {
-        MpesaService service = getService(18345);
         if (serviceProviderCode == null) {
             throw new IllegalArgumentException("Client must contain serviceProviderCode");
         }
-        // TODO(rosario): Check the 'to' property to see if it's a valid msisdn (B2C)
-        // Otherwise, it might be a B2B operation
         if (request.getTo() == null) {
             throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
         }
-        MpesaRequest mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
-        retrofit2.Response<MpesaResponse> response = service.b2c(generateAuthorizationToken(), mpesaRequest).execute();
+        MpesaService service;
+        retrofit2.Response<MpesaResponse> response;
+        MpesaRequest mpesaRequest;
+        // TODO(rosario): Improve this check once we implement regex to validate msisdn
+        if (request.getTo().startsWith("258")) {
+            service = getService(18345);
+            mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
+            response = service.b2c(generateAuthorizationToken(), mpesaRequest).execute();
+        } else {
+            service = getService(18349);
+            mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
+            response = service.b2b(generateAuthorizationToken(), mpesaRequest).execute();
+        }
         return parseHttpResponse(response);
     }
 
     public void send(Request request, Callback callback) {
-        MpesaService service = getService(18345);
         if (serviceProviderCode == null) {
             throw new IllegalArgumentException("Client must contain serviceProviderCode");
         }
@@ -113,12 +120,16 @@ public class Client {
             }
         };
         MpesaRequest mpesaRequest;
-        // TODO(rosario): Improve this check once we have regex implemented
+        MpesaService service;
+        // TODO(rosario): Improve this check once we implement regex to validate msisdn
         if (request.getTo().startsWith("258")) {
             mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
+            service = getService(18345);
             service.b2c(generateAuthorizationToken(), mpesaRequest).enqueue(retrofitCallback);
         } else {
-            // TODO: B2B
+            mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
+            service = getService(18349);
+            service.b2b(generateAuthorizationToken(), mpesaRequest).enqueue(retrofitCallback);
         }
     }
 
