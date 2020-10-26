@@ -14,6 +14,12 @@ public class MpesaRequest {
     private String input_PrimaryPartyCode;
     private String input_ReceiverPartyCode;
 
+    // Reversal
+    private String input_ReversalAmount;
+    private String input_InitiatorIdentifier;
+    private String input_SecurityCredential;
+    private String input_TransactionID;
+
     private MpesaRequest() { }
 
     public static MpesaRequest fromC2BRequest(Request request, String serviceProviderCode) {
@@ -43,6 +49,21 @@ public class MpesaRequest {
         mpesaRequest.setInput_ThirdPartyReference(request.getReference());
         mpesaRequest.setInput_PrimaryPartyCode(primaryPartyCode);
         mpesaRequest.setInput_ReceiverPartyCode(request.getTo());
+        return mpesaRequest;
+    }
+
+    public static MpesaRequest fromReversalRequest(
+            Request request,
+            String serviceProviderCode,
+            String securityCredential,
+            String initiatorIdentifier) {
+        MpesaRequest mpesaRequest = new MpesaRequest();
+        mpesaRequest.setInput_TransactionID(request.getTransaction());
+        mpesaRequest.setInput_SecurityCredential(securityCredential);
+        mpesaRequest.setInput_InitiatorIdentifier(initiatorIdentifier);
+        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
+        mpesaRequest.setInput_ServiceProviderCode(serviceProviderCode);
+        mpesaRequest.setInput_ReversalAmount(request.getAmount() + "");
         return mpesaRequest;
     }
 
@@ -100,5 +121,37 @@ public class MpesaRequest {
 
     public void setInput_ReceiverPartyCode(String input_ReceiverPartyCode) {
         this.input_ReceiverPartyCode = input_ReceiverPartyCode;
+    }
+
+    public String getInput_ReversalAmount() {
+        return input_ReversalAmount;
+    }
+
+    public void setInput_ReversalAmount(String input_ReversalAmount) {
+        this.input_ReversalAmount = input_ReversalAmount;
+    }
+
+    public String getInput_InitiatorIdentifier() {
+        return input_InitiatorIdentifier;
+    }
+
+    public void setInput_InitiatorIdentifier(String input_InitiatorIdentifier) {
+        this.input_InitiatorIdentifier = input_InitiatorIdentifier;
+    }
+
+    public String getInput_SecurityCredential() {
+        return input_SecurityCredential;
+    }
+
+    public void setInput_SecurityCredential(String input_SecurityCredential) {
+        this.input_SecurityCredential = input_SecurityCredential;
+    }
+
+    public String getInput_TransactionID() {
+        return input_TransactionID;
+    }
+
+    public void setInput_TransactionID(String input_TransactionID) {
+        this.input_TransactionID = input_TransactionID;
     }
 }

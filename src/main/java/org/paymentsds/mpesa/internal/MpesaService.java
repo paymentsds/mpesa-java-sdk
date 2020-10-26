@@ -6,6 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface MpesaService {
@@ -47,4 +48,13 @@ public interface MpesaService {
             @Query("input_QueryReference") String input_QueryReference,
             @Query("input_ThirdPartyReference") String input_ThirdPartyReference,
             @Query("input_ServiceProviderCode") String input_ServiceProviderCode);
+
+    @Headers({
+            "Content-Type: application/json",
+            "Origin: developer.mpesa.vm.co.mz"
+    })
+    @PUT("/ipg/v1x/reversal/")
+    Call<MpesaResponse> reversal(
+            @Header("Authorization") String authorization,
+            @Body MpesaRequest request);
 }

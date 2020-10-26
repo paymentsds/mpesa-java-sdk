@@ -156,6 +156,51 @@ public class Client {
                 });
     }
 
+    public Response reversal(Request request) throws IOException {
+        if (securityCredential == null) {
+            throw new IllegalArgumentException("Client must contain a securityCredential to revert a transaction");
+        }
+        if (initiatorIdentifier == null) {
+            throw new IllegalArgumentException("Client must contain a initiatorIdentifier to revert a transaction");
+        }
+        MpesaService service = getService(18354);
+        MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
+                securityCredential, initiatorIdentifier);
+        retrofit2.Response<MpesaResponse> response = service
+                .reversal(generateAuthorizationToken(), mpesaRequest)
+                .execute();
+        return parseHttpResponse(response);
+    }
+
+    public void reversal(Request request, Callback callback) {
+        if (securityCredential == null) {
+            throw new IllegalArgumentException("Client must contain a securityCredential to revert a transaction");
+        }
+        if (initiatorIdentifier == null) {
+            throw new IllegalArgumentException("Client must contain a initiatorIdentifier to revert a transaction");
+        }
+        MpesaService service = getService(18354);
+        MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
+                securityCredential, initiatorIdentifier);
+        service.reversal(generateAuthorizationToken(), mpesaRequest)
+                .enqueue(new retrofit2.Callback<MpesaResponse>() {
+                    @Override
+                    public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
+                        try {
+                            Response res = parseHttpResponse(response);
+                            callback.onResponse(res);
+                        } catch (IOException e) {
+                            callback.onError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MpesaResponse> call, Throwable t) {
+                        callback.onError(new Exception(t));
+                    }
+                });
+    }
+
     private Response parseHttpResponse(retrofit2.Response<MpesaResponse> response) throws IOException {
         MpesaResponse mpesaResponse;
         if (response.isSuccessful()) {
