@@ -133,6 +133,41 @@ public class Client {
         }
     }
 
+    public Response query(Request request) throws IOException {
+        MpesaService service = getService(18353);
+        if (serviceProviderCode == null) {
+            throw new IllegalArgumentException("Client must contain serviceProviderCode");
+        }
+        retrofit2.Response<MpesaResponse> response = service
+                .query(generateAuthorizationToken(), request.getSubject(), request.getReference(), serviceProviderCode)
+                .execute();
+        return parseHttpResponse(response);
+    }
+
+    public void query(Request request, Callback callback) {
+        MpesaService service = getService(18353);
+        if (serviceProviderCode == null) {
+            throw new IllegalArgumentException("Client must contain serviceProviderCode");
+        }
+        service.query(generateAuthorizationToken(), request.getSubject(), request.getReference(), serviceProviderCode)
+                .enqueue(new retrofit2.Callback<MpesaResponse>() {
+                    @Override
+                    public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
+                        try {
+                            Response res = parseHttpResponse(response);
+                            callback.onResponse(res);
+                        } catch (IOException e) {
+                            callback.onError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MpesaResponse> call, Throwable t) {
+                        callback.onError(new Exception(t));
+                    }
+                });
+    }
+
     private Response parseHttpResponse(retrofit2.Response<MpesaResponse> response) throws IOException {
         MpesaResponse mpesaResponse;
         if (response.isSuccessful()) {
@@ -144,7 +179,7 @@ public class Client {
         return new Response(mpesaResponse.getOutput_ConversationID(),
                 mpesaResponse.getOutput_TransactionID(), mpesaResponse.getOutput_ResponseDesc(),
                 mpesaResponse.getOutput_ResponseCode(), mpesaResponse.getOutput_ThirdPartyReference(),
-                null);
+                mpesaResponse.getOutput_ResponseTransactionStatus());
     }
 
     private MpesaService getService(int port) {

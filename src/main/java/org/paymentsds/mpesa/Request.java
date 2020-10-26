@@ -117,7 +117,7 @@ public class Request {
             }
 
             // Handle reversals
-            if (to == null && from == null) {
+            if (to == null && from == null && subject == null) {
                 if (amount == 0.0) {
                     throw new IllegalArgumentException("Request must contain an amount greater than 0.0");
                 }
