@@ -23,6 +23,7 @@ public class Client {
     private final String initiatorIdentifier;
     private final String host;
     private final String securityCredential;
+    private final String authorizationToken;
 
     private Client(
             String apiKey,
@@ -37,6 +38,7 @@ public class Client {
         this.initiatorIdentifier = initiatorIdentifier;
         this.host = host;
         this.securityCredential = securityCredential;
+        this.authorizationToken = generateAuthorizationToken();
     }
 
     public Response receive(Request request) throws IOException {
@@ -45,7 +47,7 @@ public class Client {
         }
         MpesaService service = getService(18352);
         MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
-        retrofit2.Response<MpesaResponse> response = service.c2b(generateAuthorizationToken(), mpesaRequest).execute();
+        retrofit2.Response<MpesaResponse> response = service.c2b(authorizationToken, mpesaRequest).execute();
         return parseHttpResponse(response);
     }
 
@@ -55,7 +57,7 @@ public class Client {
         }
         MpesaService service = getService(18352);
         MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
-        service.c2b(generateAuthorizationToken(), mpesaRequest).enqueue(new retrofit2.Callback<MpesaResponse>() {
+        service.c2b(authorizationToken, mpesaRequest).enqueue(new retrofit2.Callback<MpesaResponse>() {
             @Override
             public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
                 try {
@@ -84,11 +86,11 @@ public class Client {
         if (request.getTo().startsWith("258")) {
             service = getService(18345);
             mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
-            response = service.b2c(generateAuthorizationToken(), mpesaRequest).execute();
+            response = service.b2c(authorizationToken, mpesaRequest).execute();
         } else {
             service = getService(18349);
             mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
-            response = service.b2b(generateAuthorizationToken(), mpesaRequest).execute();
+            response = service.b2b(authorizationToken, mpesaRequest).execute();
         }
         return parseHttpResponse(response);
     }
@@ -119,25 +121,25 @@ public class Client {
         if (request.getTo().startsWith("258")) {
             mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
             service = getService(18345);
-            service.b2c(generateAuthorizationToken(), mpesaRequest).enqueue(retrofitCallback);
+            service.b2c(authorizationToken, mpesaRequest).enqueue(retrofitCallback);
         } else {
             mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
             service = getService(18349);
-            service.b2b(generateAuthorizationToken(), mpesaRequest).enqueue(retrofitCallback);
+            service.b2b(authorizationToken, mpesaRequest).enqueue(retrofitCallback);
         }
     }
 
     public Response query(Request request) throws IOException {
         MpesaService service = getService(18353);
         retrofit2.Response<MpesaResponse> response = service
-                .query(generateAuthorizationToken(), request.getSubject(), request.getReference(), serviceProviderCode)
+                .query(authorizationToken, request.getSubject(), request.getReference(), serviceProviderCode)
                 .execute();
         return parseHttpResponse(response);
     }
 
     public void query(Request request, Callback callback) {
         MpesaService service = getService(18353);
-        service.query(generateAuthorizationToken(), request.getSubject(), request.getReference(), serviceProviderCode)
+        service.query(authorizationToken, request.getSubject(), request.getReference(), serviceProviderCode)
                 .enqueue(new retrofit2.Callback<MpesaResponse>() {
                     @Override
                     public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
@@ -167,7 +169,7 @@ public class Client {
         MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
                 securityCredential, initiatorIdentifier);
         retrofit2.Response<MpesaResponse> response = service
-                .reversal(generateAuthorizationToken(), mpesaRequest)
+                .reversal(authorizationToken, mpesaRequest)
                 .execute();
         return parseHttpResponse(response);
     }
@@ -182,7 +184,7 @@ public class Client {
         MpesaService service = getService(18354);
         MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
                 securityCredential, initiatorIdentifier);
-        service.reversal(generateAuthorizationToken(), mpesaRequest)
+        service.reversal(authorizationToken, mpesaRequest)
                 .enqueue(new retrofit2.Callback<MpesaResponse>() {
                     @Override
                     public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
