@@ -1,6 +1,6 @@
 # M-Pesa SDK for JAVA
 
-M-Pesa SDK for JAVA is an unofficial library aiming to help develbusinesses integrating every [M-Pesa](https://developer.mpesa.vm.co.mz) operations to their JAVA applications.
+M-Pesa SDK for JAVA is an unofficial library aiming to help developer businesses integrating every [M-Pesa](https://developer.mpesa.vm.co.mz) operations to their JAVA applications.
 
 ## Features <a name="features"></a>
 
@@ -26,9 +26,8 @@ Client client = new Client.Builder()
     .publicKey("<REPLACE>")
     .serviceProviderCode("<REPLACE>")
     .initiatorIdentifier("<REPLACE>")
-    .environment(Environment.PRODUCTION)
-    .host("https://vm.co.mz")
-    .build();    
+    .environment(Environment.DEVELOPMENT)
+    .build();
 
 Request paymentRequest = new Request.Builder()
     .amount(10.0)
@@ -74,10 +73,9 @@ Client client = new Client.Builder()
     .serviceProviderCode("<REPLACE>")
     .initiatorIdentifier("<REPLACE>")
     .environment(Environment.PRODUCTION)
-    .host("https://vm.co.mz")
     .build();    
 
-Request paymentIntent = new Request.Builder()
+Request paymentRequest = new Request.Builder()
     .amount(10.0)
     .to("841234567")
     .reference("12345")
@@ -121,10 +119,9 @@ Client client = new Client.Builder()
     .serviceProviderCode("<REPLACE>")
     .initiatorIdentifier("<REPLACE>")
     .environment(Environment.PRODUCTION)
-    .host("https://vm.co.mz")
     .build();    
 
-Request paymentIntent = new Request.Builder()
+Request paymentRequest = new Request.Builder()
     .amount(10.0)
     .to("54321")
     .reference("12345")
@@ -168,11 +165,10 @@ Client client = new Client.Builder()
     .serviceProviderCode("<REPLACE>")
     .initiatorIdentifier("<REPLACE>")
     .environment(Environment.PRODUCTION)
-    .host("https://vm.co.mz")
     .securityCredential("<REPLACE>")
     .build();    
 
-Request reversalIntent = new Request.Builder()
+Request reversalRequest = new Request.Builder()
     .amount(10.0)
     .reference("12345")
     .transaction("12345")
@@ -206,7 +202,7 @@ client.revert(reversalRequest, new Callback() {
 import org.paymentsds.mpesa.Callback;
 import org.paymentsds.mpesa.Client;
 import org.paymentsds.mpesa.Environment;
-import org.paymentsds.mpesa.Intent;
+import org.paymentsds.mpesa.Request;
 import org.paymentsds.mpesa.Response;
 
 Client client = new Client.Builder()
@@ -215,7 +211,7 @@ Client client = new Client.Builder()
     .serviceProviderCode("<REPLACE>")
     .build();    
 
-Request queryIntent = new Request.Builder()
+Request queryRequest = new Request.Builder()
     .reference("12345") // input_ThirdPartyReference
     .subject("12345") // input_QueryReference
     .build();
