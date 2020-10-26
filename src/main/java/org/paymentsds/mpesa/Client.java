@@ -40,20 +40,20 @@ public class Client {
     }
 
     public Response receive(Request request) throws IOException {
-        MpesaService service = getService(18352);
-        if (serviceProviderCode == null) {
-            throw new IllegalArgumentException("Client must contain serviceProviderCode");
+        if (request.getFrom() == null) {
+            throw new IllegalArgumentException("Request must contain a 'from' field to receive money.");
         }
+        MpesaService service = getService(18352);
         MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
         retrofit2.Response<MpesaResponse> response = service.c2b(generateAuthorizationToken(), mpesaRequest).execute();
         return parseHttpResponse(response);
     }
 
     public void receive(Request request, Callback callback) {
-        MpesaService service = getService(18352);
-        if (serviceProviderCode == null) {
-            throw new IllegalArgumentException("Client must contain serviceProviderCode");
+        if (request.getFrom() == null) {
+            throw new IllegalArgumentException("Request must contain a 'from' field to receive money.");
         }
+        MpesaService service = getService(18352);
         MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
         service.c2b(generateAuthorizationToken(), mpesaRequest).enqueue(new retrofit2.Callback<MpesaResponse>() {
             @Override
@@ -74,9 +74,6 @@ public class Client {
     }
 
     public Response send(Request request) throws IOException {
-        if (serviceProviderCode == null) {
-            throw new IllegalArgumentException("Client must contain serviceProviderCode");
-        }
         if (request.getTo() == null) {
             throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
         }
@@ -97,9 +94,6 @@ public class Client {
     }
 
     public void send(Request request, Callback callback) {
-        if (serviceProviderCode == null) {
-            throw new IllegalArgumentException("Client must contain serviceProviderCode");
-        }
         if (request.getTo() == null) {
             throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
         }
@@ -135,9 +129,6 @@ public class Client {
 
     public Response query(Request request) throws IOException {
         MpesaService service = getService(18353);
-        if (serviceProviderCode == null) {
-            throw new IllegalArgumentException("Client must contain serviceProviderCode");
-        }
         retrofit2.Response<MpesaResponse> response = service
                 .query(generateAuthorizationToken(), request.getSubject(), request.getReference(), serviceProviderCode)
                 .execute();
@@ -146,9 +137,6 @@ public class Client {
 
     public void query(Request request, Callback callback) {
         MpesaService service = getService(18353);
-        if (serviceProviderCode == null) {
-            throw new IllegalArgumentException("Client must contain serviceProviderCode");
-        }
         service.query(generateAuthorizationToken(), request.getSubject(), request.getReference(), serviceProviderCode)
                 .enqueue(new retrofit2.Callback<MpesaResponse>() {
                     @Override
@@ -264,6 +252,9 @@ public class Client {
             }
             if (host == null) {
                 throw new IllegalArgumentException("Client must contain either a host or an environment");
+            }
+            if (serviceProviderCode == null) {
+                throw new IllegalArgumentException("Client must contain serviceProviderCode");
             }
             return new Client(apiKey, publicKey, serviceProviderCode, initiatorIdentifier, host, securityCredential);
         }
