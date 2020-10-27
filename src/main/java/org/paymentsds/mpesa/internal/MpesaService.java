@@ -5,9 +5,12 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+
+import java.util.Map;
 
 public interface MpesaService {
 
@@ -15,46 +18,29 @@ public interface MpesaService {
             "Content-Type: application/json",
             "Origin: developer.mpesa.vm.co.mz"
     })
-    @POST("/ipg/v1x/c2bPayment/singleStage/")
-    Call<MpesaResponse> c2b(
+    @POST("/ipg/v1x/{operation}")
+    Call<MpesaResponse> post(
             @Header("Authorization") String authorization,
+            @Path("operation") String operation,
             @Body MpesaRequest request);
 
     @Headers({
             "Content-Type: application/json",
             "Origin: developer.mpesa.vm.co.mz"
     })
-    @POST("/ipg/v1x/b2cPayment/")
-    Call<MpesaResponse> b2c(
+    @GET("/ipg/v1x/{operation}")
+    Call<MpesaResponse> get(
             @Header("Authorization") String authorization,
-            @Body MpesaRequest request);
+            @Path("operation") String operation,
+            @QueryMap Map<String, String> params);
 
     @Headers({
             "Content-Type: application/json",
             "Origin: developer.mpesa.vm.co.mz"
     })
-    @POST("/ipg/v1x/b2bPayment/")
-    Call<MpesaResponse> b2b(
+    @PUT("/ipg/v1x/{operation}")
+    Call<MpesaResponse> put(
             @Header("Authorization") String authorization,
-            @Body MpesaRequest request);
-
-    @Headers({
-            "Content-Type: application/json",
-            "Origin: developer.mpesa.vm.co.mz"
-    })
-    @GET("/ipg/v1x/queryTransactionStatus/")
-    Call<MpesaResponse> query(
-            @Header("Authorization") String authorization,
-            @Query("input_QueryReference") String input_QueryReference,
-            @Query("input_ThirdPartyReference") String input_ThirdPartyReference,
-            @Query("input_ServiceProviderCode") String input_ServiceProviderCode);
-
-    @Headers({
-            "Content-Type: application/json",
-            "Origin: developer.mpesa.vm.co.mz"
-    })
-    @PUT("/ipg/v1x/reversal/")
-    Call<MpesaResponse> reversal(
-            @Header("Authorization") String authorization,
+            @Path("operation") String operation,
             @Body MpesaRequest request);
 }

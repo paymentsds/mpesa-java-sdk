@@ -1,29 +1,10 @@
 package org.paymentsds.mpesa;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.paymentsds.mpesa.internal.MpesaRequest;
-import org.paymentsds.mpesa.internal.MpesaResponse;
-import org.paymentsds.mpesa.internal.MpesaService;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import javax.crypto.Cipher;
 import java.io.IOException;
-import java.security.KeyFactory;
-import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 
 public class Client {
-    private final String apiKey;
-    private final String publicKey;
-    private final String serviceProviderCode;
-    private final String initiatorIdentifier;
-    private final String host;
-    private final String securityCredential;
-    private final String authorizationToken;
+
+    private org.paymentsds.mpesa.internal.Client client;
 
     private Client(
             String apiKey,
@@ -32,216 +13,41 @@ public class Client {
             String initiatorIdentifier,
             String host,
             String securityCredential) {
-        this.apiKey = apiKey;
-        this.publicKey = publicKey;
-        this.serviceProviderCode = serviceProviderCode;
-        this.initiatorIdentifier = initiatorIdentifier;
-        this.host = host;
-        this.securityCredential = securityCredential;
-        this.authorizationToken = generateAuthorizationToken();
+        client = new org.paymentsds.mpesa.internal.Client(apiKey, publicKey, serviceProviderCode,
+                initiatorIdentifier, host, securityCredential);
     }
 
     public Response receive(Request request) throws IOException {
-        if (request.getFrom() == null) {
-            throw new IllegalArgumentException("Request must contain a 'from' field to receive money.");
-        }
-        MpesaService service = getService(18352);
-        MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
-        retrofit2.Response<MpesaResponse> response = service.c2b(authorizationToken, mpesaRequest).execute();
-        return parseHttpResponse(response);
+        return client.receive(request);
     }
 
     public void receive(Request request, Callback callback) {
-        if (request.getFrom() == null) {
-            throw new IllegalArgumentException("Request must contain a 'from' field to receive money.");
-        }
-        MpesaService service = getService(18352);
-        MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
-        service.c2b(authorizationToken, mpesaRequest).enqueue(new retrofit2.Callback<MpesaResponse>() {
-            @Override
-            public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
-                try {
-                    Response res = parseHttpResponse(response);
-                    callback.onResponse(res);
-                } catch (IOException e) {
-                    callback.onError(e);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MpesaResponse> call, Throwable t) {
-                callback.onError(new Exception(t));
-            }
-        });
+        client.receive(request, callback);
     }
 
     public Response send(Request request) throws IOException {
-        if (request.getTo() == null) {
-            throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
-        }
-        MpesaService service;
-        retrofit2.Response<MpesaResponse> response;
-        MpesaRequest mpesaRequest;
-        // TODO(rosario): Improve this check once we implement regex to validate msisdn
-        if (request.getTo().startsWith("258")) {
-            service = getService(18345);
-            mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
-            response = service.b2c(authorizationToken, mpesaRequest).execute();
-        } else {
-            service = getService(18349);
-            mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
-            response = service.b2b(authorizationToken, mpesaRequest).execute();
-        }
-        return parseHttpResponse(response);
+        return client.send(request);
     }
 
     public void send(Request request, Callback callback) {
-        if (request.getTo() == null) {
-            throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
-        }
-        retrofit2.Callback<MpesaResponse> retrofitCallback = new retrofit2.Callback<MpesaResponse>() {
-            @Override
-            public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
-                try {
-                    Response res = parseHttpResponse(response);
-                    callback.onResponse(res);
-                } catch (IOException e) {
-                    callback.onError(e);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MpesaResponse> call, Throwable t) {
-                callback.onError(new Exception(t));
-            }
-        };
-        MpesaRequest mpesaRequest;
-        MpesaService service;
-        // TODO(rosario): Improve this check once we implement regex to validate msisdn
-        if (request.getTo().startsWith("258")) {
-            mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
-            service = getService(18345);
-            service.b2c(authorizationToken, mpesaRequest).enqueue(retrofitCallback);
-        } else {
-            mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
-            service = getService(18349);
-            service.b2b(authorizationToken, mpesaRequest).enqueue(retrofitCallback);
-        }
+        client.send(request, callback);
     }
 
     public Response query(Request request) throws IOException {
-        MpesaService service = getService(18353);
-        retrofit2.Response<MpesaResponse> response = service
-                .query(authorizationToken, request.getSubject(), request.getReference(), serviceProviderCode)
-                .execute();
-        return parseHttpResponse(response);
+        return client.query(request);
     }
 
     public void query(Request request, Callback callback) {
-        MpesaService service = getService(18353);
-        service.query(authorizationToken, request.getSubject(), request.getReference(), serviceProviderCode)
-                .enqueue(new retrofit2.Callback<MpesaResponse>() {
-                    @Override
-                    public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
-                        try {
-                            Response res = parseHttpResponse(response);
-                            callback.onResponse(res);
-                        } catch (IOException e) {
-                            callback.onError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MpesaResponse> call, Throwable t) {
-                        callback.onError(new Exception(t));
-                    }
-                });
+        client.query(request, callback);
     }
 
     public Response reversal(Request request) throws IOException {
-        if (securityCredential == null) {
-            throw new IllegalArgumentException("Client must contain a securityCredential to revert a transaction");
-        }
-        if (initiatorIdentifier == null) {
-            throw new IllegalArgumentException("Client must contain a initiatorIdentifier to revert a transaction");
-        }
-        MpesaService service = getService(18354);
-        MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
-                securityCredential, initiatorIdentifier);
-        retrofit2.Response<MpesaResponse> response = service
-                .reversal(authorizationToken, mpesaRequest)
-                .execute();
-        return parseHttpResponse(response);
+        return client.reversal(request);
     }
 
     public void reversal(Request request, Callback callback) {
-        if (securityCredential == null) {
-            throw new IllegalArgumentException("Client must contain a securityCredential to revert a transaction");
-        }
-        if (initiatorIdentifier == null) {
-            throw new IllegalArgumentException("Client must contain a initiatorIdentifier to revert a transaction");
-        }
-        MpesaService service = getService(18354);
-        MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
-                securityCredential, initiatorIdentifier);
-        service.reversal(authorizationToken, mpesaRequest)
-                .enqueue(new retrofit2.Callback<MpesaResponse>() {
-                    @Override
-                    public void onResponse(Call<MpesaResponse> call, retrofit2.Response<MpesaResponse> response) {
-                        try {
-                            Response res = parseHttpResponse(response);
-                            callback.onResponse(res);
-                        } catch (IOException e) {
-                            callback.onError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MpesaResponse> call, Throwable t) {
-                        callback.onError(new Exception(t));
-                    }
-                });
+        client.reversal(request, callback);
     }
-
-    private Response parseHttpResponse(retrofit2.Response<MpesaResponse> response) throws IOException {
-        MpesaResponse mpesaResponse;
-        if (response.isSuccessful()) {
-            mpesaResponse = response.body();
-        } else {
-            Gson gson = new Gson();
-            mpesaResponse = gson.fromJson(response.errorBody().string(), new TypeToken<MpesaResponse>(){}.getType());
-        }
-        return new Response(mpesaResponse.getConversationId(),
-                mpesaResponse.getTransactionId(), mpesaResponse.getResponseDesc(),
-                mpesaResponse.getResponseCode(), mpesaResponse.getThirdPartyReference(),
-                mpesaResponse.getResponseTransactionStatus());
-    }
-
-    private MpesaService getService(int port) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(this.host + ":" + port)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        return retrofit.create(MpesaService.class);
-    }
-
-    private String generateAuthorizationToken(){
-        try {
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            Cipher cipher = Cipher.getInstance("RSA");
-            byte[] x509PublicKey = Base64.getDecoder().decode(publicKey);
-            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(x509PublicKey);
-            PublicKey pk = keyFactory.generatePublic(publicKeySpec);
-            cipher.init(Cipher.ENCRYPT_MODE, pk);
-            byte[] encryptedApiKey =  Base64.getEncoder().encode(cipher.doFinal(
-                    apiKey.getBytes("UTF-8")));
-            return "Bearer " + new String(encryptedApiKey, "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 
     public static class Builder {
         String apiKey;

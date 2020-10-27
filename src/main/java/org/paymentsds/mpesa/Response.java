@@ -11,7 +11,7 @@ public class Response {
     // Query Transaction
     private String transactionStatus;
 
-    Response(
+    public Response(
             String conversationId,
             String transactionId,
             String description,
