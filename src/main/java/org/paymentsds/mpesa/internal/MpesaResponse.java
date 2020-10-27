@@ -1,60 +1,70 @@
 package org.paymentsds.mpesa.internal;
 
+import com.google.gson.annotations.SerializedName;
+
 public class MpesaResponse {
-    private String output_ConversationID;
-    private String output_TransactionID;
-    private String output_ResponseDesc;
-    private String output_ResponseCode;
-    private String output_ThirdPartyReference;
-    private String output_ResponseTransactionStatus;
+    @SerializedName("output_ConversationID")
+    private String conversationId;
+    @SerializedName("output_TransactionID")
+    private String transactionId;
+    @SerializedName("output_ResponseDesc")
+    private String responseDesc;
+    @SerializedName("output_ResponseCode")
+    private String responseCode;
+    @SerializedName("output_ThirdPartyReference")
+    private String thirdPartyReference;
+
+    // Query Transaction Status
+    @SerializedName("output_ResponseTransactionStatus")
+    private String responseTransactionStatus;
 
     public MpesaResponse() { }
 
-    public String getOutput_ConversationID() {
-        return output_ConversationID;
+    public String getConversationId() {
+        return conversationId;
     }
 
-    public void setOutput_ConversationID(String output_ConversationID) {
-        this.output_ConversationID = output_ConversationID;
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
     }
 
-    public String getOutput_TransactionID() {
-        return output_TransactionID;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setOutput_TransactionID(String output_TransactionID) {
-        this.output_TransactionID = output_TransactionID;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
-    public String getOutput_ResponseDesc() {
-        return output_ResponseDesc;
+    public String getResponseDesc() {
+        return responseDesc;
     }
 
-    public void setOutput_ResponseDesc(String output_ResponseDesc) {
-        this.output_ResponseDesc = output_ResponseDesc;
+    public void setResponseDesc(String responseDesc) {
+        this.responseDesc = responseDesc;
     }
 
-    public String getOutput_ResponseCode() {
-        return output_ResponseCode;
+    public String getResponseCode() {
+        return responseCode;
     }
 
-    public void setOutput_ResponseCode(String output_ResponseCode) {
-        this.output_ResponseCode = output_ResponseCode;
+    public void setResponseCode(String responseCode) {
+        this.responseCode = responseCode;
     }
 
-    public String getOutput_ThirdPartyReference() {
-        return output_ThirdPartyReference;
+    public String getThirdPartyReference() {
+        return thirdPartyReference;
     }
 
-    public void setOutput_ThirdPartyReference(String output_ThirdPartyReference) {
-        this.output_ThirdPartyReference = output_ThirdPartyReference;
+    public void setThirdPartyReference(String thirdPartyReference) {
+        this.thirdPartyReference = thirdPartyReference;
     }
 
-    public String getOutput_ResponseTransactionStatus() {
-        return output_ResponseTransactionStatus;
+    public String getResponseTransactionStatus() {
+        return responseTransactionStatus;
     }
 
-    public void setOutput_ResponseTransactionStatus(String output_ResponseTransactionStatus) {
-        this.output_ResponseTransactionStatus = output_ResponseTransactionStatus;
+    public void setResponseTransactionStatus(String responseTransactionStatus) {
+        this.responseTransactionStatus = responseTransactionStatus;
     }
 }

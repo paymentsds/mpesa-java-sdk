@@ -1,54 +1,66 @@
 package org.paymentsds.mpesa.internal;
 
+import com.google.gson.annotations.SerializedName;
 import org.paymentsds.mpesa.Request;
 
 public class MpesaRequest {
 
-    private String input_TransactionReference;
-    private String input_Amount;
-    private String input_ThirdPartyReference;
-    private String input_CustomerMSISDN;
-    private String input_ServiceProviderCode;
+    @SerializedName("input_TransactionReference")
+    private String transactionReference;
+    @SerializedName("input_Amount")
+    private String amount;
+    @SerializedName("input_ThirdPartyReference")
+    private String thirdPartyReference;
+    @SerializedName("input_CustomerMSISDN")
+    private String customerMsisdn;
+    @SerializedName("input_ServiceProviderCode")
+    private String serviceProviderCode;
 
     // B2B
-    private String input_PrimaryPartyCode;
-    private String input_ReceiverPartyCode;
+    @SerializedName("input_PrimaryPartyCode")
+    private String primaryPartyCode;
+    @SerializedName("input_ReceiverPartyCode")
+    private String receiverPartyCode;
 
     // Reversal
-    private String input_ReversalAmount;
-    private String input_InitiatorIdentifier;
-    private String input_SecurityCredential;
-    private String input_TransactionID;
+    @SerializedName("input_ReversalAmount")
+    private String reversalAmount;
+    @SerializedName("input_InitiatorIdentifier")
+    private String initiatorIdentifier;
+    @SerializedName("input_SecurityCredential")
+    private String securityCredential;
+    @SerializedName("input_TransactionID")
+    private String transactionID;
 
     private MpesaRequest() { }
 
     public static MpesaRequest fromC2BRequest(Request request, String serviceProviderCode) {
         MpesaRequest mpesaRequest = new MpesaRequest();
-        mpesaRequest.setInput_Amount(request.getAmount() + "");
-        mpesaRequest.setInput_TransactionReference(request.getTransaction());
-        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
-        mpesaRequest.setInput_CustomerMSISDN(request.getFrom());
-        mpesaRequest.setInput_ServiceProviderCode(serviceProviderCode);
+        mpesaRequest.setAmount(request.getAmount() + "");
+        mpesaRequest.setTransactionReference(request.getTransaction());
+        mpesaRequest.setThirdPartyReference(request.getReference());
+        mpesaRequest.setCustomerMsisdn(request.getFrom());
+        mpesaRequest.setServiceProviderCode(serviceProviderCode);
         return mpesaRequest;
     }
 
     public static MpesaRequest fromB2CRequest(Request request, String serviceProviderCode) {
         MpesaRequest mpesaRequest = new MpesaRequest();
-        mpesaRequest.setInput_Amount(request.getAmount() + "");
-        mpesaRequest.setInput_TransactionReference(request.getTransaction());
-        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
-        mpesaRequest.setInput_CustomerMSISDN(request.getTo());
-        mpesaRequest.setInput_ServiceProviderCode(serviceProviderCode);
+        mpesaRequest.setAmount(request.getAmount() + "");
+        mpesaRequest.setTransactionReference(request.getTransaction());
+        mpesaRequest.setThirdPartyReference(request.getReference());
+        mpesaRequest.setCustomerMsisdn(request.getTo());
+        mpesaRequest.setServiceProviderCode(serviceProviderCode);
         return mpesaRequest;
     }
 
     public static MpesaRequest fromB2BRequest(Request request, String primaryPartyCode) {
         MpesaRequest mpesaRequest = new MpesaRequest();
-        mpesaRequest.setInput_Amount(request.getAmount() + "");
-        mpesaRequest.setInput_TransactionReference(request.getTransaction());
-        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
-        mpesaRequest.setInput_PrimaryPartyCode(primaryPartyCode);
-        mpesaRequest.setInput_ReceiverPartyCode(request.getTo());
+        mpesaRequest.setAmount(request.getAmount() + "");
+        mpesaRequest.setTransactionReference(request.getTransaction());
+        mpesaRequest.setThirdPartyReference(request.getReference());
+        mpesaRequest.setPrimaryPartyCode(primaryPartyCode);
+        mpesaRequest.setReceiverPartyCode(request.getTo());
         return mpesaRequest;
     }
 
@@ -58,100 +70,100 @@ public class MpesaRequest {
             String securityCredential,
             String initiatorIdentifier) {
         MpesaRequest mpesaRequest = new MpesaRequest();
-        mpesaRequest.setInput_TransactionID(request.getTransaction());
-        mpesaRequest.setInput_SecurityCredential(securityCredential);
-        mpesaRequest.setInput_InitiatorIdentifier(initiatorIdentifier);
-        mpesaRequest.setInput_ThirdPartyReference(request.getReference());
-        mpesaRequest.setInput_ServiceProviderCode(serviceProviderCode);
-        mpesaRequest.setInput_ReversalAmount(request.getAmount() + "");
+        mpesaRequest.setTransactionID(request.getTransaction());
+        mpesaRequest.setSecurityCredential(securityCredential);
+        mpesaRequest.setInitiatorIdentifier(initiatorIdentifier);
+        mpesaRequest.setThirdPartyReference(request.getReference());
+        mpesaRequest.setServiceProviderCode(serviceProviderCode);
+        mpesaRequest.setReversalAmount(request.getAmount() + "");
         return mpesaRequest;
     }
 
-    public String getInput_TransactionReference() {
-        return input_TransactionReference;
+    public String getTransactionReference() {
+        return transactionReference;
     }
 
-    public void setInput_TransactionReference(String input_TransactionReference) {
-        this.input_TransactionReference = input_TransactionReference;
+    public void setTransactionReference(String transactionReference) {
+        this.transactionReference = transactionReference;
     }
 
-    public String getInput_CustomerMSISDN() {
-        return input_CustomerMSISDN;
+    public String getCustomerMsisdn() {
+        return customerMsisdn;
     }
 
-    public void setInput_CustomerMSISDN(String input_CustomerMSISDN) {
-        this.input_CustomerMSISDN = input_CustomerMSISDN;
+    public void setCustomerMsisdn(String customerMsisdn) {
+        this.customerMsisdn = customerMsisdn;
     }
 
-    public String getInput_Amount() {
-        return input_Amount;
+    public String getAmount() {
+        return amount;
     }
 
-    public void setInput_Amount(String input_Amount) {
-        this.input_Amount = input_Amount;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
-    public String getInput_ThirdPartyReference() {
-        return input_ThirdPartyReference;
+    public String getThirdPartyReference() {
+        return thirdPartyReference;
     }
 
-    public void setInput_ThirdPartyReference(String input_ThirdPartyReference) {
-        this.input_ThirdPartyReference = input_ThirdPartyReference;
+    public void setThirdPartyReference(String thirdPartyReference) {
+        this.thirdPartyReference = thirdPartyReference;
     }
 
-    public String getInput_ServiceProviderCode() {
-        return input_ServiceProviderCode;
+    public String getServiceProviderCode() {
+        return serviceProviderCode;
     }
 
-    public void setInput_ServiceProviderCode(String input_ServiceProviderCode) {
-        this.input_ServiceProviderCode = input_ServiceProviderCode;
+    public void setServiceProviderCode(String serviceProviderCode) {
+        this.serviceProviderCode = serviceProviderCode;
     }
 
-    public String getInput_PrimaryPartyCode() {
-        return input_PrimaryPartyCode;
+    public String getPrimaryPartyCode() {
+        return primaryPartyCode;
     }
 
-    public void setInput_PrimaryPartyCode(String input_PrimaryPartyCode) {
-        this.input_PrimaryPartyCode = input_PrimaryPartyCode;
+    public void setPrimaryPartyCode(String primaryPartyCode) {
+        this.primaryPartyCode = primaryPartyCode;
     }
 
-    public String getInput_ReceiverPartyCode() {
-        return input_ReceiverPartyCode;
+    public String getReceiverPartyCode() {
+        return receiverPartyCode;
     }
 
-    public void setInput_ReceiverPartyCode(String input_ReceiverPartyCode) {
-        this.input_ReceiverPartyCode = input_ReceiverPartyCode;
+    public void setReceiverPartyCode(String receiverPartyCode) {
+        this.receiverPartyCode = receiverPartyCode;
     }
 
-    public String getInput_ReversalAmount() {
-        return input_ReversalAmount;
+    public String getReversalAmount() {
+        return reversalAmount;
     }
 
-    public void setInput_ReversalAmount(String input_ReversalAmount) {
-        this.input_ReversalAmount = input_ReversalAmount;
+    public void setReversalAmount(String reversalAmount) {
+        this.reversalAmount = reversalAmount;
     }
 
-    public String getInput_InitiatorIdentifier() {
-        return input_InitiatorIdentifier;
+    public String getInitiatorIdentifier() {
+        return initiatorIdentifier;
     }
 
-    public void setInput_InitiatorIdentifier(String input_InitiatorIdentifier) {
-        this.input_InitiatorIdentifier = input_InitiatorIdentifier;
+    public void setInitiatorIdentifier(String initiatorIdentifier) {
+        this.initiatorIdentifier = initiatorIdentifier;
     }
 
-    public String getInput_SecurityCredential() {
-        return input_SecurityCredential;
+    public String getSecurityCredential() {
+        return securityCredential;
     }
 
-    public void setInput_SecurityCredential(String input_SecurityCredential) {
-        this.input_SecurityCredential = input_SecurityCredential;
+    public void setSecurityCredential(String securityCredential) {
+        this.securityCredential = securityCredential;
     }
 
-    public String getInput_TransactionID() {
-        return input_TransactionID;
+    public String getTransactionID() {
+        return transactionID;
     }
 
-    public void setInput_TransactionID(String input_TransactionID) {
-        this.input_TransactionID = input_TransactionID;
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 }

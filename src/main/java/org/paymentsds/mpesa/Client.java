@@ -211,10 +211,10 @@ public class Client {
             Gson gson = new Gson();
             mpesaResponse = gson.fromJson(response.errorBody().string(), new TypeToken<MpesaResponse>(){}.getType());
         }
-        return new Response(mpesaResponse.getOutput_ConversationID(),
-                mpesaResponse.getOutput_TransactionID(), mpesaResponse.getOutput_ResponseDesc(),
-                mpesaResponse.getOutput_ResponseCode(), mpesaResponse.getOutput_ThirdPartyReference(),
-                mpesaResponse.getOutput_ResponseTransactionStatus());
+        return new Response(mpesaResponse.getConversationId(),
+                mpesaResponse.getTransactionId(), mpesaResponse.getResponseDesc(),
+                mpesaResponse.getResponseCode(), mpesaResponse.getThirdPartyReference(),
+                mpesaResponse.getResponseTransactionStatus());
     }
 
     private MpesaService getService(int port) {
