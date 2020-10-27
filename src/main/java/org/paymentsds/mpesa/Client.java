@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Client {
 
-    private org.paymentsds.mpesa.internal.Client client;
+    private final org.paymentsds.mpesa.internal.Client client;
 
     private Client(
             String apiKey,

@@ -62,10 +62,7 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
         if (request.getFrom() == null) {
             throw new IllegalArgumentException("Request must contain a 'from' field to receive money.");
         }
-        MpesaService service = getService(PORT_C2B);
-        MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
-        retrofit2.Response<MpesaResponse> response =
-                service.post(authorizationToken, PATH_C2B, mpesaRequest).execute();
+        retrofit2.Response<MpesaResponse> response = getHttpCall(request, PORT_C2B).execute();
         return parseHttpResponse(response);
     }
 
@@ -74,27 +71,19 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
             throw new IllegalArgumentException("Request must contain a 'from' field to receive money.");
         }
         this.callback = callback;
-        MpesaService service = getService(PORT_C2B);
-        MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
-        service.post(authorizationToken, PATH_C2B, mpesaRequest).enqueue(this);
+        getHttpCall(request, PORT_C2B).enqueue(this);
     }
 
     public Response send(Request request) throws IOException {
         if (request.getTo() == null) {
             throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
         }
-        MpesaService service;
         retrofit2.Response<MpesaResponse> response;
-        MpesaRequest mpesaRequest;
         // TODO(rosario): Improve this check once we implement regex to validate msisdn
         if (request.getTo().startsWith("258")) {
-            service = getService(PORT_B2C);
-            mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
-            response = service.post(authorizationToken, PATH_B2C, mpesaRequest).execute();
+            response = getHttpCall(request, PORT_B2C).execute();
         } else {
-            service = getService(PORT_B2B);
-            mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
-            response = service.post(authorizationToken, PATH_B2B, mpesaRequest).execute();
+            response = getHttpCall(request, PORT_B2B).execute();
         }
         return parseHttpResponse(response);
     }
@@ -104,40 +93,22 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
             throw new IllegalArgumentException("Request must contain a 'to' field to send money.");
         }
         this.callback = callback;
-        MpesaRequest mpesaRequest;
-        MpesaService service;
         // TODO(rosario): Improve this check once we implement regex to validate msisdn
         if (request.getTo().startsWith("258")) {
-            mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
-            service = getService(PORT_B2C);
-            service.post(authorizationToken, PATH_B2C, mpesaRequest).enqueue(this);
+            getHttpCall(request, PORT_B2C).enqueue(this);
         } else {
-            mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
-            service = getService(PORT_B2B);
-            service.post(authorizationToken, PATH_B2B, mpesaRequest).enqueue(this);
+            getHttpCall(request, PORT_B2B).enqueue(this);
         }
     }
 
     public Response query(Request request) throws IOException {
-        MpesaService service = getService(PORT_QUERY);
-        HashMap<String, String> params = new HashMap<>();
-        params.put("input_QueryReference", request.getReference());
-        params.put("input_ThirdPartyReference", request.getTransaction());
-        params.put("input_ServiceProviderCode", serviceProviderCode);
-        retrofit2.Response<MpesaResponse> response = service
-                .get(authorizationToken, PATH_QUERY, params)
-                .execute();
+        retrofit2.Response<MpesaResponse> response = getHttpCall(request, PORT_QUERY).execute();
         return parseHttpResponse(response);
     }
 
     public void query(Request request, Callback callback) {
-        MpesaService service = getService(PORT_QUERY);
-        HashMap<String, String> params = new HashMap<>();
-        params.put("input_QueryReference", request.getReference());
-        params.put("input_ThirdPartyReference", request.getTransaction());
-        params.put("input_ServiceProviderCode", serviceProviderCode);
         this.callback = callback;
-        service.get(authorizationToken, PATH_QUERY, params).enqueue(this);
+        getHttpCall(request, PORT_QUERY).enqueue(this);
     }
 
     public Response reversal(Request request) throws IOException {
@@ -147,12 +118,7 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
         if (initiatorIdentifier == null) {
             throw new IllegalArgumentException("Client must contain a initiatorIdentifier to revert a transaction");
         }
-        MpesaService service = getService(PORT_REVERSAL);
-        MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
-                securityCredential, initiatorIdentifier);
-        retrofit2.Response<MpesaResponse> response = service
-                .put(authorizationToken, PATH_REVERSAL, mpesaRequest)
-                .execute();
+        retrofit2.Response<MpesaResponse> response = getHttpCall(request, PORT_REVERSAL).execute();
         return parseHttpResponse(response);
     }
 
@@ -164,10 +130,7 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
             throw new IllegalArgumentException("Client must contain a initiatorIdentifier to revert a transaction");
         }
         this.callback = callback;
-        MpesaService service = getService(PORT_REVERSAL);
-        MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
-                securityCredential, initiatorIdentifier);
-        service.put(authorizationToken, PATH_REVERSAL, mpesaRequest).enqueue(this);
+        getHttpCall(request, PORT_REVERSAL).enqueue(this);
     }
 
     @Override
@@ -183,6 +146,45 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
     @Override
     public void onFailure(Call<MpesaResponse> call, Throwable t) {
         callback.onError(new Exception(t));
+    }
+
+    private Call<MpesaResponse> getHttpCall(Request request, int port) {
+        Call<MpesaResponse> responseCall;
+        MpesaService service = getService(port);
+        switch (port) {
+            case PORT_C2B: {
+                MpesaRequest mpesaRequest = MpesaRequest.fromC2BRequest(request, serviceProviderCode);
+                responseCall = service.post(authorizationToken, PATH_C2B, mpesaRequest);
+                break;
+            }
+            case PORT_B2B: {
+                MpesaRequest mpesaRequest = MpesaRequest.fromB2BRequest(request, serviceProviderCode);
+                responseCall = service.post(authorizationToken, PATH_B2B, mpesaRequest);
+                break;
+            }
+            case PORT_B2C: {
+                MpesaRequest mpesaRequest = MpesaRequest.fromB2CRequest(request, serviceProviderCode);
+                responseCall = service.post(authorizationToken, PATH_B2C, mpesaRequest);
+                break;
+            }
+            case PORT_QUERY: {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("input_QueryReference", request.getReference());
+                params.put("input_ThirdPartyReference", request.getTransaction());
+                params.put("input_ServiceProviderCode", serviceProviderCode);
+                responseCall = service.get(authorizationToken, PATH_QUERY, params);
+                break;
+            }
+            case PORT_REVERSAL: {
+                MpesaRequest mpesaRequest = MpesaRequest.fromReversalRequest(request, serviceProviderCode,
+                        securityCredential, initiatorIdentifier);
+                responseCall = service.put(authorizationToken, PATH_REVERSAL, mpesaRequest);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected value: " + port);
+        }
+        return responseCall;
     }
 
     private MpesaService getService(int port) {
