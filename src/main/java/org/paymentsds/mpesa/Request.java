@@ -117,10 +117,7 @@ public class Request {
             }
 
             // Handle reversals
-            if (to == null && from == null) {
-                if (amount == 0.0) {
-                    throw new IllegalArgumentException("Request must contain an amount greater than 0.0");
-                }
+            if (to == null && from == null && subject == null) {
                 if (transaction == null) {
                     throw new IllegalArgumentException("Request must contain a transaction reference");
                 }

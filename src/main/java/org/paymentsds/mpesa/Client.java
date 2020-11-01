@@ -1,12 +1,10 @@
 package org.paymentsds.mpesa;
 
+import java.io.IOException;
+
 public class Client {
-    private final String apiKey;
-    private final String publicKey;
-    private final String serviceProviderCode;
-    private final String initiatorIdentifier;
-    private final String host;
-    private final String securityCredential;
+
+    private final org.paymentsds.mpesa.internal.Client client;
 
     private Client(
             String apiKey,
@@ -15,21 +13,40 @@ public class Client {
             String initiatorIdentifier,
             String host,
             String securityCredential) {
-        this.apiKey = apiKey;
-        this.publicKey = publicKey;
-        this.serviceProviderCode = serviceProviderCode;
-        this.initiatorIdentifier = initiatorIdentifier;
-        this.host = host;
-        this.securityCredential = securityCredential;
+        client = new org.paymentsds.mpesa.internal.Client(apiKey, publicKey, serviceProviderCode,
+                initiatorIdentifier, host, securityCredential);
     }
 
-    /*public Response receive(Request request) {
-        TODO
-    }*/
+    public Response receive(Request request) throws IOException {
+        return client.receive(request);
+    }
 
     public void receive(Request request, Callback callback) {
-        // TODO
+        client.receive(request, callback);
+    }
 
+    public Response send(Request request) throws IOException {
+        return client.send(request);
+    }
+
+    public void send(Request request, Callback callback) {
+        client.send(request, callback);
+    }
+
+    public Response query(Request request) throws IOException {
+        return client.query(request);
+    }
+
+    public void query(Request request, Callback callback) {
+        client.query(request, callback);
+    }
+
+    public Response reversal(Request request) throws IOException {
+        return client.reversal(request);
+    }
+
+    public void reversal(Request request, Callback callback) {
+        client.reversal(request, callback);
     }
 
     public static class Builder {
@@ -88,6 +105,9 @@ public class Client {
             }
             if (host == null) {
                 throw new IllegalArgumentException("Client must contain either a host or an environment");
+            }
+            if (serviceProviderCode == null) {
+                throw new IllegalArgumentException("Client must contain serviceProviderCode");
             }
             return new Client(apiKey, publicKey, serviceProviderCode, initiatorIdentifier, host, securityCredential);
         }
