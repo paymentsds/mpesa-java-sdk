@@ -1,5 +1,7 @@
 package org.paymentsds.mpesa;
 
+import okhttp3.HttpUrl;
+
 import java.io.IOException;
 
 public class Client {
@@ -12,9 +14,10 @@ public class Client {
             String serviceProviderCode,
             String initiatorIdentifier,
             String host,
-            String securityCredential) {
+            String securityCredential,
+            HttpUrl url) {
         client = new org.paymentsds.mpesa.internal.Client(apiKey, publicKey, serviceProviderCode,
-                initiatorIdentifier, host, securityCredential);
+                initiatorIdentifier, host, securityCredential, url);
     }
 
     public Response receive(Request request) throws IOException {
@@ -56,6 +59,7 @@ public class Client {
         String initiatorIdentifier;
         String host;
         String securityCredential;
+        HttpUrl url;
 
         public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
@@ -91,6 +95,11 @@ public class Client {
             return this;
         }
 
+        public Builder host(HttpUrl url) {
+            this.url = url;
+            return this;
+        }
+
         public Builder securityCredential(String securityCredential) {
             this.securityCredential = securityCredential;
             return this;
@@ -109,7 +118,8 @@ public class Client {
             if (serviceProviderCode == null) {
                 throw new IllegalArgumentException("Client must contain serviceProviderCode");
             }
-            return new Client(apiKey, publicKey, serviceProviderCode, initiatorIdentifier, host, securityCredential);
+            return new Client(apiKey, publicKey, serviceProviderCode, initiatorIdentifier, host, securityCredential,
+                    url);
         }
     }
 }

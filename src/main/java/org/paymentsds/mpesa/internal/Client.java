@@ -2,6 +2,7 @@ package org.paymentsds.mpesa.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import okhttp3.HttpUrl;
 import org.paymentsds.mpesa.Callback;
 import org.paymentsds.mpesa.Request;
 import org.paymentsds.mpesa.Response;
@@ -42,19 +43,24 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
     private static final String PATH_QUERY = "queryTransactionStatus/";
     private static final String PATH_REVERSAL = "reversal/";
 
+    // for tests only
+    private HttpUrl url;
+
     public Client(
             String apiKey,
             String publicKey,
             String serviceProviderCode,
             String initiatorIdentifier,
             String host,
-            String securityCredential) {
+            String securityCredential,
+            HttpUrl url) {
         this.apiKey = apiKey;
         this.publicKey = publicKey;
         this.serviceProviderCode = serviceProviderCode;
         this.initiatorIdentifier = initiatorIdentifier;
         this.host = host;
         this.securityCredential = securityCredential;
+        this.url = url;
         this.authorizationToken = generateAuthorizationToken();
     }
 
@@ -169,8 +175,8 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
             }
             case PORT_QUERY: {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("input_QueryReference", request.getReference());
-                params.put("input_ThirdPartyReference", request.getTransaction());
+                params.put("input_QueryReference", request.getSubject());
+                params.put("input_ThirdPartyReference", request.getReference());
                 params.put("input_ServiceProviderCode", serviceProviderCode);
                 responseCall = service.get(authorizationToken, PATH_QUERY, params);
                 break;
@@ -188,8 +194,13 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
     }
 
     private MpesaService getService(int port) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(host + ":" + port)
+        Retrofit.Builder builder = new Retrofit.Builder();
+        if (url == null) {
+            builder.baseUrl(host + ":" + port);
+        } else {
+            builder.baseUrl(url);
+        }
+        Retrofit retrofit = builder
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit.create(MpesaService.class);
