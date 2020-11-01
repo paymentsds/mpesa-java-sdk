@@ -203,10 +203,7 @@ public class Client implements retrofit2.Callback<MpesaResponse> {
             Gson gson = new Gson();
             mpesaResponse = gson.fromJson(response.errorBody().string(), new TypeToken<MpesaResponse>(){}.getType());
         }
-        return new Response(mpesaResponse.getConversationId(),
-                mpesaResponse.getTransactionId(), mpesaResponse.getResponseDesc(),
-                mpesaResponse.getResponseCode(), mpesaResponse.getThirdPartyReference(),
-                mpesaResponse.getResponseTransactionStatus());
+        return Response.fromMpesaResponse(mpesaResponse);
     }
 
     private String generateAuthorizationToken(){

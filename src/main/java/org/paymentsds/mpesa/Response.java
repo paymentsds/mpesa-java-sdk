@@ -1,17 +1,19 @@
 package org.paymentsds.mpesa;
 
+import org.paymentsds.mpesa.internal.MpesaResponse;
+
 public class Response {
 
-    private String conversationId;
-    private String transactionId;
-    private String description;
-    private String code;
-    private String thirdPartyRef;
+    private final String conversationId;
+    private final String transactionId;
+    private final String description;
+    private final String code;
+    private final String thirdPartyRef;
 
     // Query Transaction
-    private String transactionStatus;
+    private final String transactionStatus;
 
-    public Response(
+    private Response(
             String conversationId,
             String transactionId,
             String description,
@@ -26,27 +28,22 @@ public class Response {
         this.transactionStatus = transactionStatus;
     }
 
-    public String getConversationId() {
-        return conversationId;
+    public static Response fromMpesaResponse(MpesaResponse mpesaResponse) {
+        return new Response(mpesaResponse.getConversationId(),
+                mpesaResponse.getTransactionId(), mpesaResponse.getResponseDesc(),
+                mpesaResponse.getResponseCode(), mpesaResponse.getThirdPartyReference(),
+                mpesaResponse.getResponseTransactionStatus());
     }
 
-    public String getTransactionId() {
-        return transactionId;
-    }
+    public String getConversationId() { return conversationId; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getTransactionId() { return transactionId; }
 
-    public String getCode() {
-        return code;
-    }
+    public String getDescription() { return description; }
 
-    public String getThirdPartyRef() {
-        return thirdPartyRef;
-    }
+    public String getCode() { return code; }
 
-    public String getTransactionStatus() {
-        return transactionStatus;
-    }
+    public String getThirdPartyRef() { return thirdPartyRef; }
+
+    public String getTransactionStatus() { return transactionStatus; }
 }
