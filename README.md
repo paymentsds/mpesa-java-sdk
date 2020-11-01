@@ -6,7 +6,7 @@ M-Pesa SDK for JAVA is an unofficial library aiming to help developer businesses
 
 - Receive money from a mobile account to a business account
 - Send money from a business account to a mobile account
-- Send money from a business account to a another business account
+- Send money from a business account to another business account
 - Revert a transaction
 - Query the status of a transaction
 
@@ -240,9 +240,43 @@ client.query(queryRequest, new Callback() {
 
 ## Installation <a name="installation"></a>
 
-### Using Composer <a name="#"></a>
+### Using Gradle <a name="#gradle"></a>
 
-### Manual Installation <a name="#"></a>
+1. Add jitpack to your root `build.gradle` file, under `repositories`:
+    ```groovy
+    repositories {
+        // ... other repositories here ...
+        maven { url 'https://jitpack.io' }
+    }
+    ```
+
+1. Add the dependency:
+    ```groovy
+    dependencies {
+        implementation 'com.github.paymentsds:mpesa-java-sdk:0.1.0-alpha1'
+    }
+    ```
+
+### Using Maven <a name="#maven"></a>
+
+1. Add jitpack to your `pom.xml` file, under `repositories`:
+    ```xml
+    <repositories>
+       <repository>
+           <id>jitpack.io</id>
+           <url>https://jitpack.io</url>
+       </repository>
+    </repositories>
+    ```
+
+1. Add the dependency:
+    ```xml
+    <dependency>
+       <groupId>com.github.paymentsds</groupId>
+       <artifactId>mpesa-java-sdk</artifactId>
+       <version>0.1.0-alpha1</version>
+    </dependency>
+    ```
 
 ### Friends <a name="related-projects/friends"></a>
 
@@ -254,13 +288,12 @@ client.query(queryRequest, new Callback() {
 ## Contributing <a name="contributing"></a>
 
 ## Changelog <a name="changelog"></a>
+### 0.1.0-alpha1
+First Release 🎉
 
 ## Authors <a name="authors"></a>
 
-- [Anísio Mandlate](https://github.com/AnisioMandlate)
-- [Edson Michaque](https://github.com/edsonmichaque)
-- [Elton Laice](https://github.com/eltonlaice)
-- [Nélio Macombo](https://github.com/neliomacombo)
+See our [AUTHORS](AUTHORS) file.
 
 ## Credits <a name="credits"></a>
 
@@ -268,6 +301,7 @@ client.query(queryRequest, new Callback() {
 
 ## License <a name="license"></a>
 
+```
 Copyright 2020 The PaymentsDS Authors
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -275,3 +309,4 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+```
