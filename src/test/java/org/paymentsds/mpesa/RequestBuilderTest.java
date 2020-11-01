@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class RequestTest {
+public class RequestBuilderTest {
 
     @Test
     public void canBuildC2bRequest() {
@@ -49,11 +49,9 @@ public class RequestTest {
     @Test
     public void canBuildB2bRequest() {
         double expectedAmount = 20.0;
-        String expectedFrom = "258844471329";
         String expectedReference = "12345";
         String expectedTransaction = "t1234";
         String expectedTo = "979797";
-        String expectedSubject = "s1234";
 
         Request request = new Request.Builder()
                 .to(expectedTo)
