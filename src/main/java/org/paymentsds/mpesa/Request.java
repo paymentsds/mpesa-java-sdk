@@ -72,7 +72,11 @@ public class Request {
         }
 
         public Builder from(String from) {
-            this.from = from;
+            if (from.length() == 9) {
+                this.from = 258 + from;
+            } else {
+                this.from = from;
+            }
             return this;
         }
 
@@ -87,7 +91,11 @@ public class Request {
         }
 
         public Builder to(String to) {
-            this.to = to;
+            if (to.length() == 9) {
+                this.to = 258 + to;
+            } else {
+                this.to = to;
+            }
             return this;
         }
 
