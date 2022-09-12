@@ -1,18 +1,99 @@
-# M-Pesa SDK for JAVA
+# JAVA M-Pesa SDK
 
-M-Pesa SDK for JAVA is an unofficial library aiming to help developer businesses integrating every [M-Pesa](https://developer.mpesa.vm.co.mz) operations to their JAVA applications.
 
-## Features <a name="features"></a>
+<p align="center">
+<a href="https://packagist.org/packages/paymentsds/<REPO_NAME>"><img src="https://img.shields.io/github/downloads/paymentsds/<REPO_NAME>/total.svg" alt="Total Downloads"></a>
 
-- Receive money from a mobile account to a business account
-- Send money from a business account to a mobile account
-- Send money from a business account to another business account
-- Revert a transaction
+<a href="<PACKAGE_MANAGER_URL>"><img src="https://img.shields.io/github/v/release/paymentsds/<REPO_NAME>?display_name=tag" alt="Latest Stable Version"></a>
+
+<a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
+</p>
+
+This is a library willing to help you to integrate the [Vodacom M-Pesa](https://developer.mpesa.vm.co.mz) operations to your application.
+
+<br>
+
+### Features
+
+Using this library, you can implement the following operations:
+
+- Receive money from a mobile account to a business account (C2B)
+- Send money from a business account to a mobile account (B2C)
+- Send money from a business account to another business account (B2B)
+- Revert any of the transactions above mentioned
 - Query the status of a transaction
 
-## Usage <a name="usage"></a>
+<br><br>
 
-### Receive Money from a Mobile Account
+## Requirements
+
+- Valid credentials obtained from the [Mpesa Developer](https://developer.mpesa.vm.co.mz) portal
+- Port 18352 open on your server (usually open on local env)
+
+
+<br><br>
+
+
+## Installation
+
+<br>
+
+### Using Gradle
+
+1. Add jitpack to your root `build.gradle` file, under `repositories`:
+    ```groovy
+    repositories {
+        // ... other repositories here ...
+        maven { url 'https://jitpack.io' }
+    }
+    ```
+
+2. Add the dependency:
+    ```groovy
+    dependencies {
+        implementation 'com.github.paymentsds:mpesa-java-sdk:0.1.0-alpha1'
+    }
+    ```
+<br>
+
+### Using Maven
+
+1. Add jitpack to your `pom.xml` file, under `repositories`:
+    ```xml
+    <repositories>
+       <repository>
+           <id>jitpack.io</id>
+           <url>https://jitpack.io</url>
+       </repository>
+    </repositories>
+    ```
+
+2. Add the dependency:
+    ```xml
+    <dependency>
+       <groupId>com.github.paymentsds</groupId>
+       <artifactId>mpesa-java-sdk</artifactId>
+       <version>0.1.0-alpha1</version>
+    </dependency>
+    ```
+
+<br>
+
+### Manual Installation
+```bash
+git clone https://github.com/paymentsds/mpesa-sdk
+```
+
+<br><br>
+
+
+## Usage
+
+Using this SDK is very simple and fast, let us see some examples:
+
+<br>
+
+#### C2B Transaction (Receive money from mobile account)
 
 ```java
 import org.paymentsds.mpesa.Callback;
@@ -56,9 +137,12 @@ client.receive(paymentRequest, new Callback() {
         // Handle failure scenario
     }
 });
+
 ```
 
-### Send Money to a Mobile Account
+<br>
+
+#### B2C Transaction (Sending money to mobile account)
 
 ```java
 import org.paymentsds.mpesa.Callback;
@@ -102,9 +186,12 @@ client.send(paymentRequest, new Callback() {
         // Handle failure scenario
     }
 });
+
 ```
 
-### Send Money to a Business Account
+<br>
+
+#### B2B Transaction (Sending money to business account)
 
 ```java
 import org.paymentsds.mpesa.Callback;
@@ -148,9 +235,13 @@ client.send(paymentRequest, new Callback() {
         // Handle failure scenario
     }
 });
+
 ```
 
-### Revert a Transaction
+<br>
+
+
+#### Transaction Reversal
 
 ```java
 import org.paymentsds.mpesa.Callback;
@@ -194,9 +285,12 @@ client.revert(reversalRequest, new Callback() {
         // Handle failure scenario
     }
 });
+
 ```
 
-### Query the status of a Transaction
+<br>
+
+#### Query the transaction status
 
 ```java
 import org.paymentsds.mpesa.Callback;
@@ -236,77 +330,47 @@ client.query(queryRequest, new Callback() {
         // Handle failure scenario
     }
 });
+
 ```
 
-## Installation <a name="installation"></a>
+<br><br>
 
-### Using Gradle <a name="#gradle"></a>
-
-1. Add jitpack to your root `build.gradle` file, under `repositories`:
-    ```groovy
-    repositories {
-        // ... other repositories here ...
-        maven { url 'https://jitpack.io' }
-    }
-    ```
-
-1. Add the dependency:
-    ```groovy
-    dependencies {
-        implementation 'com.github.paymentsds:mpesa-java-sdk:0.1.0-alpha1'
-    }
-    ```
-
-### Using Maven <a name="#maven"></a>
-
-1. Add jitpack to your `pom.xml` file, under `repositories`:
-    ```xml
-    <repositories>
-       <repository>
-           <id>jitpack.io</id>
-           <url>https://jitpack.io</url>
-       </repository>
-    </repositories>
-    ```
-
-1. Add the dependency:
-    ```xml
-    <dependency>
-       <groupId>com.github.paymentsds</groupId>
-       <artifactId>mpesa-java-sdk</artifactId>
-       <version>0.1.0-alpha1</version>
-    </dependency>
-    ```
-
-### Friends <a name="related-projects/friends"></a>
+## Friends
 
 - [M-Pesa SDK for Javascript](https://github.com/paymentsds/mpesa-js-sdk)
-- [M-Pesa SDK for Ruby](https://github.com/paymentsds/mpesa-ruby-sdk)
 - [M-Pesa SDK for Python](https://github.com/paymentsds/mpesa-python-sdk)
+- [M-Pesa SDK for PHP](https://github.com/paymentsds/mpesa-php-sdk)
+- [M-Pesa SDK for Ruby](https://github.com/paymentsds/mpesa-ruby-sdk)
 
 
-## Contributing <a name="contributing"></a>
-
-## Changelog <a name="changelog"></a>
-### 0.1.0-alpha1
-First Release 🎉
+<br><br>
 
 ## Authors <a name="authors"></a>
 
-See our [AUTHORS](AUTHORS) file.
+- [Name](https://github.com/username)
 
-## Credits <a name="credits"></a>
 
-- [All Contributors](../../contributors)
+<br><br>
 
-## License <a name="license"></a>
+## Contributing
 
-```
-Copyright 2020 The PaymentsDS Authors
+Thank you for considering contributing to this package. If you wish to do it, email us at [developers@paymentsds.org](mailto:developers@paymentsds.org) and we will get back to you as soon as possible.
+
+
+<br><br>
+
+## Security Vulnerabilities
+
+If you discover a security vulnerability, please email us at [developers@paymentsds.org](mailto:developers@paymentsds.org) and we will address the issue with the needed urgency.
+
+<br><br>
+
+## License
+
+Copyright 2022 &copy; The PaymentsDS Team
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-```
