@@ -1,13 +1,7 @@
 # JAVA M-Pesa SDK
 
 
-<p align="center">
-<a href="https://packagist.org/packages/paymentsds/<REPO_NAME>"><img src="https://img.shields.io/github/downloads/paymentsds/<REPO_NAME>/total.svg" alt="Total Downloads"></a>
-
-<a href="<PACKAGE_MANAGER_URL>"><img src="https://img.shields.io/github/v/release/paymentsds/<REPO_NAME>?display_name=tag" alt="Latest Stable Version"></a>
-
-<a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
-</p>
+<p align="center"><a href="https://jitpack.io/#paymentsds/mpesa-java-sdk"><img src="https://img.shields.io/github/downloads/paymentsds/mpesa-java-sdk/total" alt="Total Downloads"></a> <a href="https://jitpack.io/#paymentsds/mpesa-java-sdk"><img src="https://img.shields.io/jitpack/version/com.github.paymentsds/mpesa-java-sdk" alt="Latest Stable Version"></a> <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a></p>
 
 This is a library willing to help you to integrate the [Vodacom M-Pesa](https://developer.mpesa.vm.co.mz) operations to your application.
 
